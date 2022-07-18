@@ -1,0 +1,285 @@
+.ws_tabs_switch_icons-tab {
+    width: 25%;
+    float: left;
+    border-bottom: 1px #cfd0d1 solid;
+    height: 180px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.ws_tabs_switch_icons-tabs-wrapper {
+    position: relative;   
+}
+.ws_tabs_switch_icons-tabs {
+    position: relative;
+    z-index: 10;
+    overflow: hidden;
+}
+.ws_tabs_switch_icons-floating-tab {
+    position: absolute;
+    top: 0;
+    width: 25%;
+    height: 180px;
+    border-bottom: 1px #fff solid;
+    background: #fff;
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0px -6px 13px 0px rgba(0, 0, 0, 0.12);
+
+    -webkit-transition: left 0.5s ease;
+    -moz-transition: left 0.5s ease;
+    -o-transition: left 0.5s ease;
+    -ms-transition: left 0.5s ease;
+    transition: left 0.5s ease;
+}
+.ws_tabs_switch_icons-floating-tab:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    z-index: 20;
+    height: 1px;
+    width: 100%;
+    background: #FFF;
+}
+.ws_tabs_switch_icons-floating-tab:after {
+    content: '';
+    position: absolute;
+    left: -16px;
+    bottom: -15px;
+    z-index: 1;
+    height: 14px;
+    width: 100%;
+    background: #FFF;
+    padding: 0px 16px;
+    box-sizing: content-box;
+}
+.ws_tabs_switch_icons-tab {
+    cursor: pointer;
+}
+.ws_tabs_switch_icons-tab-wrapper {
+    float: none;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.ws_tabs_switch_icons-tab-wrapper {
+    float: left;
+    width: 100%;
+}
+
+.ws_tabs_switch_icons-tab-header-title {
+    display: flex;
+}
+.ws_tabs_switch_icons-tab-header-title-bottom {
+    font-family: AgencyFB;
+    font-weight: bold;
+    font-size: 44px;
+    align-self: flex-end;
+    margin-bottom: 0;
+    line-height: 1;
+}
+
+.ws_tabs_switch_wrap {
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.ws_tabs_switch_icons-tab-header-title,
+.ws_tabs_switch_icons-tab-inner-container {
+    float: right;
+}
+
+.ws_tabs_switch_icons-tab-footer-desc {
+    font-family: AgencyFB;
+    color: #878990;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: block;
+}
+
+.ws_tabs_switch_icons-tab-footer-desc-center {
+    text-align: center;
+}
+
+.ws_tabs_switch_icons-tab-footer-desc-left {
+    text-align: left;
+}
+
+.ws_tabs_switch_icons-tab-footer-desc-right {
+    text-align: right;
+}
+
+/* content wrapper */
+.ws_tabs_switch_icons-contents {
+    position: relative;
+
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    -ms-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.ws_tabs_switch_icons-content {
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 60px 0;
+}
+.ws_tabs_switch_icons-content > * {
+    flex: unset;
+}
+.ws_tabs_switch_icons-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    visibility: hidden;
+    opacity: 0;
+    z-index: 0;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    -ms-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.ws_tabs_switch_icons-content-active {
+    position: relative;
+    visibility: visible;
+    opacity: 1;
+    z-index: 10;
+
+    -webkit-user-select: auto;
+    -moz-user-select: auto;
+    -o-user-select: auto;
+    -ms-user-select: auto;
+    user-select: auto; 
+}
+.ws_tabs_switch_icons-content-text {
+    padding: 0 !important;
+}
+.ws_tabs_switch_icons-content-image-left {
+    margin: 5px 20px 30px 0 !important;
+    text-align: left;
+}
+.ws_tabs_switch_icons-content-image-right {
+    margin: 30px 20px 5px 0 !important;
+    text-align: right;
+}
+
+.icon_wrapper {
+    background: url(../img/weee-iconsBG.svg);
+    color: #75c145;
+    font-size: 55px;
+    width: 89px;
+    height: 86px;
+    background-repeat: no-repeat;
+    text-align: center;
+}
+.icon_wrapper img {
+    vertical-align: middle;
+    height: auto;
+    width: auto;
+}
+
+.icon_wrapper i {
+    font-family: "ff-font-awesome" !important;
+}
+
+select {
+    font-family: 'FontAwesome', sans-serif;
+}
+
+
+/* RWD */
+@media (min-width: 992px) {
+    .ws_tabs_switch_icons-content-text.col-md-pull-4 {
+        margin-left: -20px;
+    }
+}
+@media (max-width: 991px) {
+    .ws_tabs_switch_wrap {
+        flex-direction: column;
+        align-items: center;
+    }
+    .ws_tabs_switch_icons-tab-footer-desc {
+        text-align: center !important;
+    }
+    .ws_tabs_switch_icons-tab {
+        justify-content: start;
+    }
+    .ws_tabs_switch_icons-tab-wrapper {
+        margin-top: 24px;
+    }
+
+    .ws_tabs_switch_icons-tab-header-title-bottom {
+        font-size: 34px;
+    }
+
+    .icon_wrapper {
+        font-size: 44px;
+        width: 68px;
+        height: 66px;
+    }
+    .icon_wrapper img {
+        height: 50px;
+        margin-top: -9px;
+    }
+
+    .ws_tabs_switch_icons-content {
+        flex-wrap: wrap;
+    }
+    .ws_tabs_switch_icons-content-image,
+    .ws_tabs_switch_icons-content-image-left,
+    .ws_tabs_switch_icons-content-image-right {
+        text-align: center;
+        margin: 0 !important;
+    }
+    .ws_tabs_switch_icons-content-image img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .ws_tabs_switch_icons-content-text a[class*="wb-btn"] {
+        width: 100%;
+        text-align: center;
+    }
+
+}
+
+@media (max-width: 767px) {
+    .ws_tabs_switch_icons-main {
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+
+    .ws_tabs_switch_icons-tab-header-title-bottom {
+        font-size: 28px;
+    }
+    .ws_tabs_switch_icons-tab-footer-desc {
+        font-size: 14px;
+        letter-spacing: 0.05em;
+    }
+}
+
+@media (max-width: 419px) {
+    .icon_wrapper {
+        font-size: 36px;
+        width: 58px;
+        height: 56px;
+    }
+    .icon_wrapper img {
+        height: 40px;
+        margin-top: -7px;
+    }
+}

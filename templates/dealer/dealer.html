@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+{{request.user}} - Ewarriors
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h3 style="font-family: 'Times New Roman', Times, serif; font-weight: bolder;">Hello Dealer, {{request.user|capfirst}}</h3>
+    <br>
+    <h4 style="font-family: monospace ; font-weight: bolder;">
+        We are very much thankful to you that you have joined this organisation for the betterment of the world. 
+    <br><br>
+        Our aim is to eliminate and reduce the generation of e-waste from all over the world leading the world to be a safe place for the survival of living organisms.
+    </h4>
+    <iframe src="{% static 'url/ewaste_blog.html' %}" style="height: 800px; width: 1110px; border: 0ch; background-color: rgb(255, 253, 208);"></iframe>
+</div>
+{% endblock %}

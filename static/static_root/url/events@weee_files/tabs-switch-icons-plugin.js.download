@@ -1,0 +1,42 @@
+//Globals
+
+function WS_TABSSWITCH(id, index) {
+	// animate auto function
+	jQuery.fn.animateAuto = function(prop, speed, callback){
+		var elem, height, width;
+		return this.each(function(i, el){
+			el = jQuery(el), elem = el.clone().css({"height":"auto","width":"auto"}).appendTo("body");
+			height = elem.css("height"),
+			width = elem.css("width"),
+			elem.remove();
+			
+			if(prop === "height")
+				//el.css("height", el.outerHeight());
+				el.animate({"height":height}, speed, callback);
+			else if(prop === "width")
+				//el.css("width", el.outerWidth());
+				el.animate({"width":width}, speed, callback);  
+			else if(prop === "both")
+				//el.css({"width": el.outerWidth()}, {"height": el.outerHeight()});
+				el.animate({"width":width,"height":height}, speed, callback);
+		});  
+	}
+
+	jQuery('.ws_tabs_switch_icons-tab').removeClass('ws_tabs_switch_icons-tab-active');
+	jQuery('.ws_tabs_switch_icons-content').removeClass('ws_tabs_switch_icons-content-active');
+
+	jQuery('.ws_tabs_switch_icons-tab[data-id="tab-' + id + '"]').addClass('ws_tabs_switch_icons-tab-active');
+
+	var activeContent = jQuery('.ws_tabs_switch_icons-content[data-id="tab-' + id + '"]');
+	activeContent.addClass('ws_tabs_switch_icons-content-active');
+	activeContent.parent().animateAuto("height", 100, function() {
+		activeContent.parent().css("height", "auto");
+	});
+	
+	// activeContent.parent().css('min-height', activeContent.outerHeight());
+
+
+	jQuery('.ws_tabs_switch_icons-floating-tab').css({
+		'left': index * 25 + '%'
+	});
+}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+E-Warriors - Events
+{% endblock %}
+
+{% block css %}
+<style>
+    .example {
+background-color: #eee;
+overflow-y: scroll; /* Add the ability to scroll */
+}
+
+.example::-webkit-scrollbar {
+display: none;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<iframe class="example" src="https://www.junkart.in/view/ratecard-calculator" height="800" width="1110" title="Iframe Example" style="border: 0ch; overflow: hidden; background-color: rgb(255, 253, 208);"></iframe>
+{% endblock %}

@@ -1,0 +1,8 @@
+pip install virtualenvwrapper-win
+mkvirtualenv venv
+workon venv
+pip install -r requirements.txt
+py manage.py collectstatic
+py manage.py makemigrations
+py manage.py migrate
+py manage.py runserver

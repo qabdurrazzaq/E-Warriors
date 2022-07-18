@@ -1,0 +1,172 @@
+(function($) {
+
+ //   jQuery.validator.addMethod("isValidSubscribePhone", function(value, element) {
+       // var phone_no=$('input[name="phone"]').val();
+
+ //       return  returnval=( $('input[name="phone"]').val().length  <9)? false :true ;
+  //  }, "Enter valid phone ")
+
+
+    var subscribeValidate = function() {
+        var formSubscribe = $('#subscribe-form');
+        var errorHandler1 = $('.errorHandler', formSubscribe);
+        var successHandler1 = $('.successHandler', formSubscribe);
+        var phone_no=$('input[name="phone"]').val();
+         //console.log( "phone" + " " + phone_no +  " " + phone_no.length);
+        //alert(phone_no)
+        formSubscribe.validate({
+            "phone_val":console.log( "phone" + " " + $('input[name="phone"]').val() +  " " + $('input[name="phone"]').val().length),
+            errorElement: "span", // contain the error msg in a span tag
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) { // render error placement for each input type
+                phone_no=$('input[name="phone"]').val();
+                console.log( "phone" + " " +"phone" + " " + phone_no +  " " + phone_no.length +  " " );
+                if (element.attr("type") == "name" ) { // for chosen elements, need to insert the error after the chosen container
+                    error.insertAfter($(element).closest('.form-group').children('div').children().last());
+                } else if (element.attr("name") == "dd" || element.attr("name") == "mm" || element.attr("name") == "yyyy") {
+                    error.insertAfter($(element).closest('.form-group').children('div'));
+                } else {
+                    error.insertAfter(element);
+                    // for other inputs, just perform default behavior
+                }
+            },
+            ignore: "",
+            rules: {
+                phone: {
+                    minlength: 10,
+                    maxlength:10,
+                    digits:true,
+                    required: true
+
+                },
+                email: {
+                    email: true,
+                    required: true
+                    //isValidSubscribePhone: false //phone_no.length <10 ? true: false
+                }
+
+
+            },
+            messages: {
+                phone: "Please specify your valid phone no ",
+                email: {
+                    required: "Please enter your valid email.",
+                    email: "Your email address must be in the format of name@domain.com"
+                }
+
+            },
+
+            invalidHandler: function (event, validator) { //display error alert on form submit
+                successHandler1.hide();
+                errorHandler1.show();
+            },
+            highlight: function (element) {
+                $(element).closest('.help-block').removeClass('valid');
+                // display OK icon
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error').find('.symbol').removeClass('ok').addClass('required');
+                // add the Bootstrap error class to the control group
+            },
+            unhighlight: function (element) { // revert the change done by hightlight
+                $(element).closest('.form-group').removeClass('has-error');
+                // set error class to the control group
+            },
+            success: function (label, element) {
+                label.addClass('help-block valid');
+                // mark the current input as valid and display OK icon
+                $(element).closest('.form-group').removeClass('has-error').addClass('has-success').find('.symbol').removeClass('required').addClass('ok');
+            },
+            submitHandler: function (form) {
+                successHandler1.show();
+                errorHandler1.hide();
+                // submit form
+                //$('#form').submit();
+                SubmitSubscribe(form);
+            }
+        });
+    };
+
+    $(document).ready(function(){
+        $(window).scroll(function(){
+            if ($(this).scrollTop() > 100) {
+                $('#scroll').fadeIn();
+            } else {
+                $('#scroll').fadeIn();
+            }
+        });
+        $('#scroll').click(function(){
+            $("html, body").animate({ scrollTop: 0 }, 600);
+            return false;
+        });
+    });
+
+
+    function SubmitSubscribe(form) {
+        var fromdata = $(form).serialize();
+        $.ajax({
+            'url': '/subscribe',
+            method: "POST",
+            data:fromdata,
+            dataType:'json',
+            success:function(res) {
+                console.log(res);
+                console.log(" return sucessfully");
+                if(!res.error){
+                    $('#subscribe-success').removeClass('no-display');
+                    $('#subscribe-fail').addClass('no-display');
+                }else{
+                    $('#subscribe-fail').removeClass('no-display');
+                    $('#subscribe-success').addClass('no-display');
+                }
+            },
+            error:function (err) {
+                console.log(err)
+                    $('#subscribe-fail').removeClass('no-display');
+                    $('#subscribe-success').addClass('no-display');
+            }
+        })
+    }
+   // console.log( "Works till here");
+    subscribeValidate();
+
+     /*   var phone = $("#phone_subscribe").val();
+        var email = $("#email_subscribe").val();
+        $.ajax({
+            'url': '/subscribe',
+            method: "POST",
+            data: {
+                "phone": phone,
+                "email": email
+            },
+            dataType: 'json',
+            success: function (data) {
+
+            }
+        })*/
+
+    $('#resendMail').click(function () {
+        var email = $('#resendMail').attr('data-email');
+        if(!email.match(/^[a-zA-Z0-9\-_\.]+@[a-zA-Z0-9\-_]+([.]{1}[a-zA-Z0-9\-_]+)+$/)){
+            bottomNotify('Email is incorrect.', 'error');
+            return;
+        }
+        $.ajax({
+            type:"GET",
+            url:"/auth/emailVerification/step1?email="+email,
+            success: function (result) {
+                if(result.error){
+                    return;
+                }
+                $('#resendMail').parent().html('');
+                bottomNotify('A verification mail has been sent on '+email+'.', 'info');
+            },
+            error: function (err) {
+                bottomNotify('Error, sending verification mail on '+email+'.', 'error');
+            }
+        });
+    });
+
+    function bottomNotify(msg, level){
+        $.notify(msg, {globalPosition: "bottom left", className: level, showAnimation: 'slideDown'})
+    }
+})(jQuery);
+

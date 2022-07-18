@@ -1,0 +1,525 @@
+
+$.notify.addStyle('dangerous', {
+    html: "<div><span data-notify-text/></div>",
+    classes: {
+        base: {
+            "white-space": "nowrap",
+            "background-color": "#e5312b",
+            "padding": "5px",
+            "z-index": "2",
+            "color": "#fbfbfb",
+            "box-shadow":"1px 1px 1px grey"
+        }
+    }
+});
+
+$.notify.addStyle('success', {
+    html: "<div><span data-notify-text/></div>",
+    classes: {
+        base: {
+            "width": "100%",
+            "height": "40px",
+            "white-space": "nowrap",
+            "background-color": "#3dc970",
+            "padding": "5px",
+            "z-index": "2",
+            "font-size": "20px",
+            "text-align": "center",
+            "color": "#fbfbfb",
+        }
+    }
+});
+
+(function () {
+
+    function Profile(){
+        var _data = {};
+
+        function setName(name){
+            _data.name = name;
+        }
+        function getName(){
+            return _data.name;
+        }
+
+        function setEmail(email){
+            _data.email = email;
+        }
+
+        function getEmail(){
+            return _data.email;
+        }
+
+        function setAddress(address){
+            _data.address = address;
+        }
+
+        function getAddress(){
+            return _data.address;
+        }
+
+        function setPhone(phone){
+            _data.phone = phone;
+        }
+
+        function getPhone(){
+            return _data.phone;
+        }
+
+        return {
+            setAddress : setAddress,
+            setEmail : setEmail,
+            setName : setName,
+            setPhone : setPhone,
+            getAddress : getAddress,
+            getEmail : getEmail,
+            getName : getName,
+            getPhone : getPhone
+        }
+    }
+
+    var changedFlag = 0;
+    var currentProfile = new Profile();
+
+
+    $(function(){
+        currentProfile.setAddress($('#location').val());
+        currentProfile.setEmail($('#uemail').val());
+        currentProfile.setName($('#uname').val());
+        currentProfile.setPhone($('#uphone').val());
+    });
+
+
+    $('#uemail').change(function(){
+        $('#statusSign').attr('class','');
+        var email = $('#uemail').val();
+        if(currentProfile.getEmail() !== email && email.match(/^[^@\s]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/)){
+            $('#statusSign').addClass('fa fa-circle-o-notch spin-loading');
+            $.ajax({
+                type: "GET",
+                url: "/api/user/profile/isEmailOrPhoneAvailable?email="+email,
+                success: function(result){
+                    $('#statusSign').removeClass('spin-loading');
+                    if(result.data){
+                        $('#statusSign').attr('class','fa fa-check').attr('title',"Email availabe.");
+                        return;
+                    }
+                    $('#statusSign').css({}).attr('class','fa fa-times').attr('title',"Email unavailable.");
+                },
+                error: function(err){
+                    $('#statusSign').removeClass('spin-loading');
+                    $('#statusSign').attr('class','fa fa-times').attr('title',"Something went wrong.");
+                }
+            });
+        }
+
+    });
+
+    $('#profileForm').submit(function (e) {
+
+        var email = $('#uemail').val();
+        var phone = $('#uphone').val();
+        var name = $('#uname').val();
+
+        if(!phone.match(/^[7-9]\d{9}$/) || !email.match(/^[^@\s]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/) || name === ''){
+            bottomNotify('Please enter correct Email, Phone number and Name.');
+            return;
+        }
+
+        if(phone !== currentProfile.getPhone() && phone.match(/^[7-9]\d{9}$/)){
+            changedFlag = 1;
+            doSendOTP(phone);
+        }
+
+        if(email !== currentProfile.getEmail() && email.match(/^[^@\s]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/)){
+            doEmailVerification(email);
+        }
+
+        if(name !== currentProfile.getName() && name !== ''){
+            updateName(name);
+        }
+
+    });
+    
+    function updateName(name) {
+        $.ajax({
+            type:'POST',
+            url:'/account/profile?api=true',
+            data:{name:name},
+            success: function (result) {
+                if(result.error){
+                    bottomNotify('Couldn\'t update your name.', 'error');
+                    return;
+                }
+                if(!changedFlag){
+                    $('#closeProfileModal').click();
+                }
+                window.location.reload(true);
+            },
+            error: function (result) {
+                if(!(JSON.parse(result.responseText).error)){
+                    return;
+                }
+                bottomNotify('Couldn\'t update your name.', 'error');
+            }
+        });
+    }
+
+    function doEmailVerification(email){
+        $.ajax({
+            type:'GET',
+            url:'/auth/emailVerification/step1?email='+email,
+            success: function (result) {
+                if(result.error){
+                    bottomNotify('Error, sending verification mail.', 'error');
+                    return;
+                }
+                if(!changedFlag){
+                    $('#closeProfileModal').click();
+                }
+                bottomNotify('A verification mail has been sent to your email address.', 'info');
+            },
+            error: function(err){
+                var msg = JSON.parse(err.responseText).errs.msg;
+                bottomNotify(msg, 'error');
+            }
+        });
+    }
+
+    var clicked = false;
+    $('#uotpTimer').click(function () {
+        if(countDown >= 60){
+            doSendOTP($('#uphone').val());
+        }
+    });
+
+
+    function doSendOTP(phone){
+        if(clicked) return;
+        clicked = true;
+        $.ajax({
+            type:'POST',
+            url:'/auth/phoneVerification/step1',
+            data: {newPhone: phone},
+            success: function(result){
+                if(result.error){
+                    bottomNotify('Error, sending otp.', 'error');
+                    return;
+                }
+                showOTPVerificationPanel(phone);
+            },
+            error: function (err) {
+                var msg = JSON.parse(err.responseText).errs.msg;
+                bottomNotify(msg, 'error');
+            }
+        });
+    }
+
+    function showOTPVerificationPanel(){
+        $('#profilePanel').addClass('hide');
+        $('#otpPanel').removeClass('hide');
+        $('#otpPanel .modal-header').text('OTP is sent successfully to mobile ******'+phone.slice(6)+'.').css({color:'blue'});
+        $('#uotpTimer').css({
+            pointer:"none"
+        });
+        countDown = 60;
+
+        var timer = setInterval(function(){
+            $('#uotpTimer').text('00:'+('0'+(countDown)).slice(-2));
+            --countDown;
+            if(countDown < 0){
+                stopTimer();
+            }
+        },1000);
+
+        function stopTimer() {
+            clearInterval(timer);
+            $('#uotpTimer').html('<a>Resend</a>').css({cursor:'pointer'});
+            countDown = 60;
+            clicked = false;
+        }
+    }
+
+    $('#otpForm').submit(function(e){
+        $('#ajax-error').addClass('hide').html('');
+
+        var phone = $('#uphone').val();
+        var otp = $('#uotp').val();
+
+        $.ajax({
+            type: "POST",
+            url:"/auth/phoneVerification/step2",
+            data: {newPhone: phone, otp:otp},
+            success: function (result) {
+                if(result.error){
+                    bottomNotify('OTP didn\'t matched.', 'error');
+                    return;
+                }
+                bottomNotify('Phone number successfully changed.', 'success');
+                $('#otpPanel').addClass('hide');
+                $('#profilePanel').removeClass('hide');
+                $('#closeProfileModal').click();
+            },
+            error: function (err) {
+                try {
+                    bottomNotify('Error verifying OTP: '+err.responseJSON.errs.msg, 'error');
+                }
+                catch(ex) {
+                    console.error('Exception verifying OTP', err.responseText, ex);
+					bottomNotify('Some unknown error occurred verifying your OTP. Please try again later.', 'error');
+                }
+            }
+        });
+    });
+
+    function bottomNotify(msg, level){
+        $.notify(msg, {globalPosition: "bottom left", className: level, showAnimation: 'slideDown'})
+    }
+
+    if(window.location.pathname !== '/account' && window.location.pathname !== '/request-pickup'){
+        var email = $('#userInfo').attr('data-email');
+        var name = $('#userInfo').attr('data-name');
+        var phone = $('#userInfo').attr('data-phone');
+        var beforeEmailVerification = parseInt($('#userInfo').attr('data-beforeEmailVerification'));
+        var user = parseInt($('#userInfo').attr('data-user'));
+        if (user && (!name || !phone || (!email && !beforeEmailVerification))){
+            $(window).load(function () {
+                setTimeout(function () {
+                    $('#requiredProfileInfo').click();
+                }, 2000);
+            });
+        }
+    }
+    
+    $('#popupProfile').click(function () {
+        $('#requiredProfileInfo').click();
+        if(!$('#profilePanel .modal-title ').children().length)
+            $('#profilePanel .modal-title ').append("<button class='close', type='button', data-dismiss='modal'>×</button>");
+    });
+
+
+    var rateCardStore = {};
+    var currentRateCalculate = 0;
+    var currentValue;
+
+    function getRateCard(cb) {
+        var currCity= $(".cityOptions").val();
+        if(currCity=='del'){
+            currCity=null;
+        }
+        $.ajax({
+            type:"GET",
+            data: {
+                city:currCity
+            },
+            url:"/api/rateCard",
+            dataType:'json',
+            success:function(result) {
+                if(!result.error && result.data)
+                    cb(null, result.data);
+                else
+                    cb(result.error, null);
+            }
+        });
+    }
+
+    function populateRateCard(err, data){
+        if(err){
+            return;
+        }
+        rateCardStore={};
+        var options = {
+            valueNames: ['item_name', 'item_rate', {data:['id']}, {attr:'src', name:'image'}],
+
+            item: '<div data-toggle="tooltip" class="col-sm-2 rate_card" >'
+            +'<div class="item front">'
+            +'<div class="label-img"><span class="centerer"></span><img class="image"/></div>'
+            +'<div class="label-block">'
+            +'<div class="item_name"></div>'
+            +'<div><i class="fa fa-rupee"></i>&nbsp;<span class="item_rate"></span></div>'
+            +'</div>'
+            +'</div>'
+            +'</div>'
+        };
+
+        var rateCardValues = data.map(function(item, i){
+            rateCardStore[i+1] = item;
+            return {
+                id: i+1,
+                image: item.icon,
+                item_rate: item.price+'/'+item.unit,
+                item_name: item.name
+            };
+
+        });
+
+        var ratecardContainerList = new List('ratecardContainer', options);
+        ratecardContainerList.clear();
+        ratecardContainerList.add(rateCardValues);
+    }
+
+    $("#ratecard-calculator").on('keydown input', '.input_weights', calculateRate);
+
+    // $("#ratecard-calculator").on('keydown', '.input_weights', calculateRate);
+
+    function calculateRate(e){
+
+        var data_id = $(this).parent().attr('data-id');
+        var unitType = rateCardStore[data_id].unit.toString().toLowerCase();
+
+
+        if(e && unitType === 'piece' && (e.which===190 || e.which===110) ){
+            topLeftNotify.bind(this, 'Please enter a valid quantity.')();
+            e.preventDefault();
+            return;
+        }
+        var input_weight = parseFloat($(this).val());
+
+        var item_price = parseFloat(rateCardStore[data_id].price);
+        if(input_weight < 0 || ($(this).val().length && isNaN(input_weight))){
+
+            topLeftNotify.bind(this, 'Please enter a valid quantity.')();
+            return;
+        }
+
+
+        var old_quantity = parseFloat($(this).attr('data-old-quantity'));
+
+        currentRateCalculate -= old_quantity*item_price;
+
+        if(input_weight && $(this).parent().hasClass('checked')){
+            currentRateCalculate += input_weight*item_price;
+            $(this).attr('data-old-quantity',input_weight);
+        }else{
+            $(this).attr('data-old-quantity','0');
+        }
+
+        $('.rate').html(currentRateCalculate.toFixed(2));
+    }
+
+    $('#ratecard-calculator').on('click', '.rate_card',function(){
+        var that = this;
+        // console.log("ratecard click.");
+        doCheck.bind(this)();
+
+        var no_of_selected = $("#ratecard-calculator .checked").length;
+        if(no_of_selected){
+            $("#ratecard-calculator .selected_items").html((no_of_selected)+"&nbsp;selected");
+        }else{
+            $("#ratecard-calculator .selected_items").html("");
+        }
+
+        showInputBox.bind(this)();
+    });
+
+    function doCheck(){
+        if($(this).hasClass('checked')){
+            $(this).removeClass("checked");
+            return;
+        }
+        $(this).addClass("checked");
+    }
+
+    function showInputBox(){
+        if($(this).hasClass('checked')){
+            $(this).append("<input type='number' placeholder='Quantity' min='0' data-old-quantity='0' class='input_weights popupInputBox'/>");
+            return;
+        }
+        calculateRate.bind($(this).find(".input_weights"))();
+        $(this).find(".input_weights").remove();
+    }
+
+    $("#ratecard-calculator").on('click', '.input_weights', function(event){
+        event.stopPropagation();
+    });
+
+    $(".toggleRateCalculator").click(function () {
+        if($('#ratecard-calculator').hasClass('hide')){
+            getRateCard(populateRateCard);
+            $('#ratecard-calculator').removeClass('hide');
+            return;
+        }
+        $('#ratecard-calculator').addClass('hide');
+        currentRateCalculate = 0;
+        $('.rate').html(currentRateCalculate);
+    });
+
+    var pathname = location.pathname;
+    if(pathname === "/view/ratecard-calculator"){
+        getRateCard(populateRateCard);
+    }
+
+    try{
+        var junkartCredit = parseInt($("#junkartCredit-score").val());
+        if(junkartCredit>=20){
+            $("#redeem-button").removeClass("btn-success-outline").addClass("btn-success").attr("disabled", false);
+        }
+    }catch(e){console.log(e);}
+})();
+
+function topLeftNotify(msg, position){
+    $(this).notify(msg,
+        {style:"dangerous", elementPosition: position||"top left", hideDuration: 500, showDuration: 500, autoHideDelay:2000}
+    );
+}
+
+function bottomCenterNotify(msg, position, level){
+    $.notify(msg,
+        {globalPosition: position||"bottom center", className: level||"success", hideDuration: 0, showDuration: 0, autoHideDelay:5000, arrowShow: false, arrowSize: 0}
+    );
+}
+
+function initReferral(){
+
+    var referralCode = $('#referralCode').data('referralcode');
+
+    $('#download-app').click(function(e){
+        e.preventDefault();
+        var refereePhone = $('#referee_phone').val();
+        if(!refereePhone.match(/^[7-9]\d{9}$/)){
+            topLeftNotify.bind($('#referee_phone'), "Please enter correct phone number", "bottom right")();
+        }else{
+            $.ajax({
+                type: "POST",
+                url: "/api/referral/trackUser",
+                data: {
+                    referralCode: referralCode,
+                    phone: refereePhone
+                },
+                success: function(result){
+                    if(result.error && result.errors.length){
+                        topLeftNotify.bind($('#referee_phone'), result.msg || "Sorry, Please try again.", "bottom right")();
+                        return;
+                    }else{
+                        window.location.href = result.data.url;
+                    }
+                },
+                error: function(err){
+                    topLeftNotify.bind($('#referee_phone'), "Sorry, Please try again.", "bottom right")();
+                }
+            });
+        }
+    });
+}
+initReferral();
+
+$("#redeem-button").click(function(){
+    $("#redeem-button").attr("disabled", true);
+    $.ajax({
+        type: "post",
+        url: "/api/paytm/gratification",
+        success: function (result) {
+            if(result.error){
+                bottomCenterNotify(result.msg);
+                $("#redeem-button").attr("disabled", false);
+                return;
+            }
+            bottomCenterNotify(result.msg);
+            $("#junkartCredit").html("&#8377; 0");
+        },
+        error: function(err){
+            $("#redeem-button").attr("disabled", false);
+            bottomCenterNotify(err.responseText.msg||"Something went wrong. Please try again or contact Junkart.");
+        }
+    });
+});

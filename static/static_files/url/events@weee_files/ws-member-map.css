@@ -1,0 +1,17 @@
+.member_map-section,
+#member_map-container {
+    width: 100%;
+    height: 45vh;
+    background: #E8EDF0;
+}
+
+.member_map-shadow {
+    box-shadow: inset 0px 3px 15px 0px #959799;
+    width: 100%;
+    height: 45vh;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    pointer-events: none;
+}

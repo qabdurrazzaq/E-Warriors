@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+{% if login %}
+Customer - Login
+{% elif signin %}
+Customer - Signin
+{% else %}
+Personal Details
+{% endif %}
+{% endblock %}
+
+{% block css %}
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<form method="POST">{% csrf_token %}
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+            {% if drop_address %}
+            <div class="card" style="margin-top: 10px;">
+                <div class="card-body">
+                    <h1 class="h3 mb-3 fw-normal text-center">Add Item's Drop Location</h1>
+                    <form method="POST" action="{% url 'checkout' id %}">{% csrf_token %}
+                        <div class="form-group">
+                          <label for="first_name">Drop Location</label>
+                          <input name = "drop_address" type="text" class="form-control" id="customerdetails" aria-describedby="emailHelp" placeholder="Drop Location">
+                        </div>
+                        <center><button class="btn btn-block btn-lg btn-success" type="submit">Add</button><br><br></center>
+                      </form>
+                </div>
+            </div>
+            {% elif login %}
+            <div class="card" style="margin-top: 75px;">
+                <div class="card-body centered">
+                    <h1 class="h3 mb-3 fw-normal text-center">Customer Login</h1>
+                    {{form.as_p}}
+                    <center><button class="btn btn-block btn-lg btn-success text-center" type="submit">Login</button><br><br></center>
+                    <hr>
+                    <p class="text-center">Don't have an account? <strong><a href="{% url 'customer_signin' %}" class="link-success">Sign In</a></strong></p>
+                </div>
+            </div>
+            {% elif signin %}
+            <div class="card" style="margin-top: 10px;">
+                <div class="card-body">
+                    <h1 class="h3 mb-3 fw-normal text-center">Customer Sign In</h1>
+                    {{form.as_p}}
+                    <center><button class="btn btn-block btn-lg btn-success text-center" type="submit">Sign In</button><br><br></center>
+                    <hr>
+                    <p class="text-center">Already have an account? <strong><a href="{% url 'customer_login' %}" class="link-success">Login</a></strong></p>
+                </div>
+            </div>
+            {% else %}
+            <div class="card" style="margin-top: 10px;">
+                <div class="card-body">
+                    <h1 class="h3 mb-3 fw-normal text-center">Customer Personal Details</h1>
+                    <form method="POST" action="{% url 'customer_details' %}">{% csrf_token %}
+                        <div class="form-group">
+                          <label for="first_name">First Name</label>
+                          <input name = "first_name" type="text" class="form-control" id="customerdetails" aria-describedby="emailHelp" placeholder="First Name">
+                        </div>
+                        <div class="form-group">
+                          <label for="middle_name">Middle Name</label>
+                          <input name = "middle_name" type="text" class="form-control" id="customerdetails" placeholder="Middle Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Last Name</label>
+                            <input name = "last_name" type="text" class="form-control" id="customerdetails" placeholder="Last Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone_number">Phone Number</label>
+                            <input name = "phone_number" type="number" class="form-control" id="customerdetails" placeholder="Phone Number">
+                        </div>
+                        <center><button class="btn btn-block btn-lg btn-success" type="submit">Submit</button><br><br></center>
+                      </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</form>
+{% endblock %}

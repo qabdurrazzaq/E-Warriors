@@ -1,0 +1,179 @@
+.international_waste-section,
+#international_waste-container {
+    width: 100%;
+    height: 45vh;
+    background: #E8EDF0;
+}
+
+.international_waste-shadow {
+    box-shadow: inset 0px 3px 15px 0px #959799;
+    width: 100%;
+    height: 45vh;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* register page */
+#acf-international_waste .acf-fields {
+    position: relative;
+    display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;      /* TWEENER - IE 10 */
+    display: -webkit-flex;     /* NEW - Chrome */
+    display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    -webkit-flex-wrap: wrap;
+    -moz-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+#acf-international_waste .acf-fields > * {
+    -webkit-box-flex: unset;      /* OLD - iOS 6-, Safari 3.1-6 */
+    -moz-box-flex: unset;         /* OLD - Firefox 19- */
+    -webkit-flex: unset;          /* Chrome */
+    -ms-flex: unset;              /* IE 10 */
+    flex: unset;                  /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+
+#acf-international_waste .acf-fields > [class*="post-title"] {
+    width: 100%;
+}
+
+#acf-international_waste .acf-fields > .acf-field {
+    border: none;
+}
+
+#acf-international_waste .acf-fields > .acf-field.top-space {
+    margin-top: 40px;
+}
+#acf-international_waste .acf-fields > .acf-field.bottom-space {
+    margin-bottom: 40px;
+}
+
+#acf-international_waste .acf-fields > .acf-field.flex-wrap-reverse {
+    display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;      /* TWEENER - IE 10 */
+    display: -webkit-flex;     /* NEW - Chrome */
+    display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+#acf-international_waste .acf-fields > .acf-field.flex-wrap-reverse > * {
+    -webkit-box-flex: unset;      /* OLD - iOS 6-, Safari 3.1-6 */
+    -moz-box-flex: unset;         /* OLD - Firefox 19- */
+    -webkit-flex: unset;          /* Chrome */
+    -ms-flex: unset;              /* IE 10 */
+    flex: unset;                  /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+#acf-international_waste .acf-fields > .acf-field.flex-wrap-reverse .acf-label {
+    font-size: 16px;
+}
+#acf-international_waste .acf-fields > .acf-field.flex-wrap-reverse .acf-input {
+    margin-right: 20px;
+}
+
+#acf-international_waste .acf-field input[type="text"], 
+#acf-international_waste .acf-field input[type="password"], 
+#acf-international_waste .acf-field input[type="number"], 
+#acf-international_waste .acf-field input[type="search"], 
+#acf-international_waste .acf-field input[type="email"], 
+#acf-international_waste .acf-field input[type="url"], 
+#acf-international_waste .acf-field textarea, 
+#acf-international_waste .acf-field select,
+#acf-international_waste .select2-container .select2-selection--single .select2-selection__rendered,
+#acf-international_waste .select2-container .select2-selection--multiple .select2-selection__rendered {
+    padding: 8px 10px;
+    box-sizing: border-box
+}
+#acf-international_waste .select2-container .select2-selection--multiple .select2-selection__rendered {
+    padding-bottom: 5px !important;
+}
+#acf-international_waste .select2-container .select2-search--inline input.select2-search__field,
+#acf-international_waste .select2-container .select2-selection--multiple input.select2-search__field {
+    padding: 0 !important;
+    margin-top: 0 !important;
+}
+
+#acf-international_waste .select2-container .select2-selection--single .select2-selection__rendered {
+    padding-right: 20px !important;
+}
+#acf-international_waste .acf-url input[type="url"] {
+    padding-left: 25px !important;
+}
+
+#acf-international_waste .acf-field input[type="text"], 
+#acf-international_waste .acf-field input[type="password"], 
+#acf-international_waste .acf-field input[type="number"], 
+#acf-international_waste .acf-field input[type="search"], 
+#acf-international_waste .acf-field input[type="email"], 
+#acf-international_waste .acf-field input[type="url"], 
+#acf-international_waste .acf-field textarea, 
+#acf-international_waste .acf-field select,
+#acf-international_waste .select2-container .select2-selection--single,
+#acf-international_waste .select2-container .select2-selection--multiple {
+    font-size: 17px !important;
+    line-height: 1.4 !important;
+    border: 1px solid rgba(128, 128, 128, 0.2) !important;
+    border-radius: 6px;
+}
+#acf-international_waste .select2-container .select2-selection--multiple { 
+    line-height: 1 !important;
+}
+#acf-international_waste .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: inherit;
+}
+#acf-international_waste .select2-container .select2-selection--multiple input.select2-search__field {
+    border: none !important;
+}
+
+#acf-international_waste .acf-input-wrap input,
+#acf-international_waste .select2-container .select2-selection--single {
+    height: 40px;
+}
+#acf-international_waste .select2-container .select2-selection--multiple {
+    min-height: 40px;
+}
+
+#acf-international_waste .acf-url i {
+    top: 10px;
+}
+
+#acf-international_waste .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 38px;
+}
+
+#acf-international_waste .acf-form-submit {
+    text-align: center;
+    margin-top: 30px;
+}
+#acf-international_waste input[type="submit"][class*="button"] {
+    color: white!important;
+    padding: 10px 25px!important;
+    background: #75c145!important;
+    border-radius: 22px!important;
+    box-shadow: 0px 4px 13px 0px rgba(117, 193, 69, 0.52);
+    font-family: 'Lato', 'Arial', sans-serif;
+    text-transform: uppercase;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    border: 2px solid #75c145;
+    text-decoration: none !important;
+
+    transition-duration: 400ms;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.7,1,0.7,1);
+}
+#acf-international_waste input[type="submit"][class*="button"]:hover,
+#acf-international_waste input[type="submit"][class*="button"]:focus {
+    border-color: #75c145 !important;
+    background: #fff!important;
+    color: #75c145!important;
+    text-decoration: none;
+}
+#acf-international_waste .switch-html {
+    display: none;
+}
